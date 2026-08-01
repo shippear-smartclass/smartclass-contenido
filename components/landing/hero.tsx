@@ -44,7 +44,7 @@ export function Hero() {
               <dd className="text-sm text-muted-foreground">grados de primaria</dd>
             </div>
             <div>
-              <dt className="font-display text-2xl font-bold text-foreground">5</dt>
+              <dt className="font-display text-2xl font-bold text-foreground">9</dt>
               <dd className="text-sm text-muted-foreground">áreas curriculares</dd>
             </div>
             <div>
