@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { Button as ButtonPrimitive } from '@base-ui/react/button'
 import { cva, type VariantProps } from 'class-variance-authority'
 
@@ -44,12 +45,25 @@ function Button({
   className,
   variant = 'default',
   size = 'default',
+  asChild,
+  children,
   ...props
-}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
+}: ButtonPrimitive.Props &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean
+  }) {
+  // Map the common `asChild` pattern to Base UI's `render` prop so a single
+  // child element (e.g. a Next.js <Link/>) is rendered as the button.
+  const renderProp =
+    asChild && React.isValidElement(children)
+      ? { render: children as React.ReactElement }
+      : { children }
+
   return (
     <ButtonPrimitive
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
+      {...renderProp}
       {...props}
     />
   )
