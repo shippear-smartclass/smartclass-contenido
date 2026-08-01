@@ -33,7 +33,7 @@ export function Diferenciales() {
 
         <div className="mx-auto mt-12 grid max-w-4xl gap-6 md:grid-cols-2">
           <div className="rounded-xl border-2 border-primary/30 bg-card p-6">
-            <h3 className="font-display text-lg font-bold text-primary">SIPPPEAR SmartClass</h3>
+            <h3 className="font-display text-lg font-bold text-primary">SmartClass</h3>
             <ul className="mt-4 space-y-3">
               {nuestros.map((item) => (
                 <li key={item} className="flex items-start gap-3 text-sm text-card-foreground">
