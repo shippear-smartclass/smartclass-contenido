@@ -4,6 +4,7 @@ import { Hero } from '@/components/landing/hero'
 import { Problema } from '@/components/landing/problema'
 import { ComoFunciona } from '@/components/landing/como-funciona'
 import { Diferenciales } from '@/components/landing/diferenciales'
+import { Planes } from '@/components/landing/planes'
 
 export default function HomePage() {
   return (
@@ -14,6 +15,7 @@ export default function HomePage() {
         <Problema />
         <ComoFunciona />
         <Diferenciales />
+        <Planes />
       </main>
       <SiteFooter />
     </div>

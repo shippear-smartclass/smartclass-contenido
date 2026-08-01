@@ -28,6 +28,9 @@ export function SiteHeader() {
           <a href="#diferenciales" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
             Diferenciales
           </a>
+          <a href="#planes" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+            Planes
+          </a>
         </nav>
 
         <Button asChild size="sm">
