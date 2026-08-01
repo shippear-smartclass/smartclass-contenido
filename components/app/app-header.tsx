@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { GraduationCap, LayoutGrid, LogOut } from 'lucide-react'
+import { GraduationCap, LayoutGrid, LogOut, FolderOpen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/components/auth/auth-provider'
 
@@ -31,10 +31,17 @@ export function AppHeader() {
         </Link>
 
         <div className="flex items-center gap-2">
-          <Button asChild variant="outline" size="sm" className="gap-2">
+          <Button asChild variant="ghost" size="sm" className="gap-2">
             <Link href="/app">
               <LayoutGrid className="size-4" />
               <span className="hidden sm:inline">Herramientas</span>
+            </Link>
+          </Button>
+
+          <Button asChild variant="outline" size="sm" className="gap-2">
+            <Link href="/app/dashboard">
+              <FolderOpen className="size-4" />
+              <span className="hidden sm:inline">Mis clases</span>
             </Link>
           </Button>
 

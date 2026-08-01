@@ -178,4 +178,39 @@
   @page {
     margin: 1.5cm;
   }
+
+  /* Ocultar la presentación cuando se imprime el documento */
+  .presentacion-print {
+    display: none !important;
+  }
+}
+
+/* Modo presentación: el body lleva data-print-mode="slides".
+   Solo se imprime la presentación, en horizontal y una slide por página. */
+@media print {
+  body[data-print-mode='slides'] .documento-print {
+    display: none !important;
+  }
+  body[data-print-mode='slides'] .presentacion-print {
+    display: block !important;
+  }
+  body[data-print-mode='slides'] .slide {
+    page-break-after: always;
+    break-after: page;
+  }
+  body[data-print-mode='slides'] .slide:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+  body[data-print-mode='slides'] {
+    background: white !important;
+  }
+}
+
+@page slides {
+  size: landscape;
+  margin: 0;
+}
+body[data-print-mode='slides'] {
+  page: slides;
 }

@@ -2,6 +2,7 @@ import { createDeepSeek } from '@ai-sdk/deepseek'
 import { generateText, Output } from 'ai'
 import { z } from 'zod'
 import { getArea } from '@/lib/curriculum'
+import { galeriaRosario, imagenPorTexto } from '@/lib/rosario-imagenes'
 import type { FormularioGeneracion, SecuenciaDidactica } from '@/lib/types'
 
 export const maxDuration = 60
@@ -68,14 +69,34 @@ Respetá la cantidad de actividades pedida y distribuí los momentos (Inicio, De
       output: Output.object({ schema: secuenciaSchema }),
     })
 
-    return Response.json({ secuencia: output })
+    return Response.json({ secuencia: enriquecerConImagenes(output as SecuenciaDidactica, form) })
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     console.log('[v0] Error generando recurso, usando fallback simulado:', message)
 
     // Plan B: si la IA falla por cualquier motivo, devolvemos un recurso
     // simulado para que la demo nunca muestre un error al docente.
-    return Response.json({ secuencia: construirSecuenciaSimulada(form), simulada: true })
+    return Response.json({
+      secuencia: enriquecerConImagenes(construirSecuenciaSimulada(form), form),
+      simulada: true,
+    })
+  }
+}
+
+/**
+ * Agrega imágenes de Rosario (banco gratuito) a la secuencia: una portada, una
+ * galería y una imagen por actividad, elegidas según el texto de cada parte.
+ */
+function enriquecerConImagenes(sec: SecuenciaDidactica, form: FormularioGeneracion): SecuenciaDidactica {
+  const contextoTexto = `${form.temaLocal} ${sec.titulo} ${sec.contextoLocal} ${form.contenido}`
+  return {
+    ...sec,
+    imagenPortada: sec.imagenPortada ?? imagenPorTexto(0, contextoTexto),
+    galeria: sec.galeria && sec.galeria.length > 0 ? sec.galeria : galeriaRosario(),
+    actividades: sec.actividades.map((a, i) => ({
+      ...a,
+      imagen: a.imagen ?? imagenPorTexto(i, a.titulo, a.descripcion, form.temaLocal, form.contenido),
+    })),
   }
 }
 

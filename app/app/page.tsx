@@ -8,7 +8,9 @@ import {
   Table2,
   ArrowRight,
   Lock,
+  FolderOpen,
 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { AppHeader } from '@/components/app/app-header'
 import { Badge } from '@/components/ui/badge'
 
@@ -71,6 +73,26 @@ export default function AppDashboardPage() {
           <p className="text-muted-foreground">
             Elegí un generador. Todos los recursos se enmarcan en el Diseño Curricular de la provincia de Santa Fe.
           </p>
+        </div>
+
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border bg-card p-5">
+          <div className="flex items-center gap-3">
+            <span className="flex size-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <FolderOpen className="size-5" />
+            </span>
+            <div>
+              <h2 className="font-display text-base font-semibold text-card-foreground">Mis clases</h2>
+              <p className="text-sm text-muted-foreground">
+                Revisá todo el material que fuiste creando, organizado por curso.
+              </p>
+            </div>
+          </div>
+          <Button asChild variant="outline" className="gap-2">
+            <Link href="/app/dashboard">
+              Abrir panel
+              <ArrowRight className="size-4" />
+            </Link>
+          </Button>
         </div>
 
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
