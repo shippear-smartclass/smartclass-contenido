@@ -12,7 +12,7 @@ export function SiteHeader() {
           </span>
           <span className="flex flex-col leading-none">
             <span className="font-display text-base font-bold tracking-tight text-foreground">
-              SIPPPEAR SmartClass
+              SmartClass
             </span>
             <span className="text-[11px] text-muted-foreground">Recursos didácticos · Santa Fe</span>
           </span>
