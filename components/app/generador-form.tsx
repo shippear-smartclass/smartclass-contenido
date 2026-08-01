@@ -78,7 +78,9 @@ export function GeneradorForm({ form, onChange, onSubmit, loading }: Props) {
               onValueChange={(v) => onChange({ areaId: v ?? '', contenido: '' })}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Seleccioná el área" />
+                <SelectValue placeholder="Seleccioná el área">
+                  {(value: string) => AREAS.find((a) => a.id === value)?.nombre ?? value}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {AREAS.map((a) => (

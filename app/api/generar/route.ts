@@ -66,7 +66,19 @@ Respetá la cantidad de actividades pedida y distribuí los momentos (Inicio, De
 
     return Response.json({ secuencia: output })
   } catch (error) {
-    console.log('[v0] Error generando recurso:', error instanceof Error ? error.message : error)
+    const message = error instanceof Error ? error.message : String(error)
+    console.log('[v0] Error generando recurso:', message)
+
+    if (message.includes('credit card') || message.includes('AI Gateway')) {
+      return Response.json(
+        {
+          error:
+            'La IA todavía no está habilitada en este proyecto. Para activarla hay que agregar una tarjeta al AI Gateway de Vercel y así desbloquear los créditos gratuitos.',
+        },
+        { status: 402 },
+      )
+    }
+
     return Response.json(
       { error: 'No se pudo generar el recurso. Intentá nuevamente.' },
       { status: 500 },

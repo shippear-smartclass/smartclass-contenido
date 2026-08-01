@@ -54,9 +54,10 @@ function Button({
   }) {
   // Map the common `asChild` pattern to Base UI's `render` prop so a single
   // child element (e.g. a Next.js <Link/>) is rendered as the button.
+  // When rendering a non-native element, tell Base UI so it doesn't warn.
   const renderProp =
     asChild && React.isValidElement(children)
-      ? { render: children as React.ReactElement }
+      ? { render: children as React.ReactElement, nativeButton: false }
       : { children }
 
   return (
