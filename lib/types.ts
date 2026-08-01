@@ -23,7 +23,8 @@ export type SecuenciaDidactica = {
 export type FormularioGeneracion = {
   grado: string
   areaIds: string[]
-  contenido: string
+  contenidos: string[]
+  contenidosExtra: string
   temaLocal: string
   tipoRecurso: string
   cantidad: string

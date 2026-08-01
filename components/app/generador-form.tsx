@@ -7,9 +7,7 @@ import { Textarea } from '@/components/ui/textarea'
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
@@ -89,9 +87,17 @@ export function GeneradorForm({ form, onChange, onSubmit, loading }: Props) {
     const next = form.areaIds.includes(id)
       ? form.areaIds.filter((x) => x !== id)
       : [...form.areaIds, id]
-    // Si el contenido elegido ya no pertenece a ningún área seleccionada, lo limpiamos.
-    const contenidoValido = getAreas(next).some((a) => a.contenidos.includes(form.contenido))
-    onChange({ areaIds: next, contenido: contenidoValido ? form.contenido : '' })
+    // Filtramos los contenidos elegidos que ya no pertenezcan a ningún área seleccionada.
+    const disponibles = getAreas(next).flatMap((a) => a.contenidos)
+    const contenidos = form.contenidos.filter((c) => disponibles.includes(c))
+    onChange({ areaIds: next, contenidos })
+  }
+
+  function toggleContenido(contenido: string) {
+    const next = form.contenidos.includes(contenido)
+      ? form.contenidos.filter((x) => x !== contenido)
+      : [...form.contenidos, contenido]
+    onChange({ contenidos: next })
   }
 
   function toggleEje(eje: string) {
@@ -138,30 +144,51 @@ export function GeneradorForm({ form, onChange, onSubmit, loading }: Props) {
           </Field>
         </div>
 
-        <Field label="Contenido del Diseño Curricular (Santa Fe)">
-          <Select
-            value={form.contenido}
-            onValueChange={(v) => onChange({ contenido: v ?? '' })}
-            disabled={form.areaIds.length === 0}
-          >
-            <SelectTrigger>
-              <SelectValue
-                placeholder={form.areaIds.length > 0 ? 'Elegí un contenido' : 'Primero elegí un área'}
-              />
-            </SelectTrigger>
-            <SelectContent>
+        <Field label="Contenidos del Diseño Curricular (Santa Fe) — podés elegir varios">
+          {form.areaIds.length === 0 ? (
+            <p className="rounded-lg border border-dashed border-border bg-muted/30 p-3 text-xs text-muted-foreground">
+              Primero elegí al menos un área para ver sus contenidos.
+            </p>
+          ) : (
+            <div className="flex flex-col gap-4 rounded-lg border border-border bg-muted/20 p-3">
               {gruposContenidos.map((g) => (
-                <SelectGroup key={g.area}>
-                  <SelectLabel>{g.area}</SelectLabel>
-                  {g.contenidos.map((c) => (
-                    <SelectItem key={`${g.area}-${c}`} value={c}>
-                      {c}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
+                <div key={g.area} className="flex flex-col gap-2">
+                  <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                    {g.area}
+                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    {g.contenidos.map((c) => {
+                      const active = form.contenidos.includes(c)
+                      return (
+                        <button
+                          key={`${g.area}-${c}`}
+                          type="button"
+                          aria-pressed={active}
+                          onClick={() => toggleContenido(c)}
+                          className={`rounded-full border px-3 py-1.5 text-left text-xs font-medium transition-colors ${
+                            active
+                              ? 'border-primary bg-primary text-primary-foreground'
+                              : 'border-border bg-background text-muted-foreground hover:border-primary/50 hover:text-foreground'
+                          }`}
+                        >
+                          {c}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
               ))}
-            </SelectContent>
-          </Select>
+            </div>
+          )}
+        </Field>
+
+        <Field label="Otros contenidos (opcional) — escribí los que quieras agregar">
+          <Textarea
+            value={form.contenidosExtra}
+            onChange={(e) => onChange({ contenidosExtra: e.target.value })}
+            placeholder="Ej: fracciones equivalentes, lectura de textos instructivos, cuidado del agua..."
+            rows={3}
+          />
         </Field>
       </section>
 

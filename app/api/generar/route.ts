@@ -33,6 +33,11 @@ export async function POST(req: Request) {
     const areas = getAreas(form.areaIds)
     const nombresAreas = areas.map((a) => a.nombre).join(', ')
     const ejes = form.ejesTransversales?.length ? form.ejesTransversales.join(', ') : 'ninguno'
+    const contenidos = [
+      ...(form.contenidos ?? []),
+      ...(form.contenidosExtra?.trim() ? [form.contenidosExtra.trim()] : []),
+    ]
+    const contenidosTexto = contenidos.length ? contenidos.map((c) => `• ${c}`).join('\n') : 'sin especificar'
 
     const system = `Sos un asistente pedagógico experto en Educación Primaria de la Provincia de Santa Fe, Argentina.
 Generás recursos didácticos alineados ESTRICTAMENTE al Diseño Curricular provincial de Santa Fe.
@@ -48,7 +53,8 @@ Reglas:
 - Tipo de recurso: ${form.tipoRecurso}
 - Grado: ${form.grado}
 - Área(s): ${nombresAreas || 'sin especificar'}
-- Contenido curricular (Santa Fe): ${form.contenido}
+- Contenidos curriculares (Santa Fe) a abordar de forma integrada:
+${contenidosTexto}
 - Tema local / de actualidad: ${form.temaLocal || 'sin especificar'}
 - Ejes transversales del Diseño Curricular de Santa Fe a integrar: ${ejes}
 - Cantidad de actividades: ${form.cantidad}
@@ -57,6 +63,11 @@ Reglas:
 - Tipo de institución: ${form.tipoInstitucion}
 - Notas adicionales del docente: ${form.notasDocente || 'ninguna'}
 
+${
+      contenidos.length > 1
+        ? 'Se indicaron varios contenidos: abordalos de forma integrada y articulada dentro del mismo recurso, mostrando cómo se relacionan entre sí.'
+        : ''
+}
 ${
       areas.length > 1
         ? 'Como se indicó más de un área, integrá y relacioná sus contenidos de forma articulada dentro de la misma secuencia (enfoque interdisciplinario).'
