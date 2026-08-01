@@ -75,7 +75,11 @@ function ChipGroup({
 }
 
 export function GeneradorForm({ form, onChange, onSubmit, loading }: Props) {
-  const areasSeleccionadas = getAreas(form.areaIds)
+  const areaIds = form.areaIds ?? []
+  const contenidosSel = form.contenidos ?? []
+  const ejesSel = form.ejesTransversales ?? []
+
+  const areasSeleccionadas = getAreas(areaIds)
   // Contenidos disponibles agrupados por cada área elegida, para poder
   // integrar contenidos de más de un área.
   const gruposContenidos = areasSeleccionadas.map((a) => ({
@@ -84,26 +88,22 @@ export function GeneradorForm({ form, onChange, onSubmit, loading }: Props) {
   }))
 
   function toggleArea(id: string) {
-    const next = form.areaIds.includes(id)
-      ? form.areaIds.filter((x) => x !== id)
-      : [...form.areaIds, id]
+    const next = areaIds.includes(id) ? areaIds.filter((x) => x !== id) : [...areaIds, id]
     // Filtramos los contenidos elegidos que ya no pertenezcan a ningún área seleccionada.
     const disponibles = getAreas(next).flatMap((a) => a.contenidos)
-    const contenidos = form.contenidos.filter((c) => disponibles.includes(c))
+    const contenidos = contenidosSel.filter((c) => disponibles.includes(c))
     onChange({ areaIds: next, contenidos })
   }
 
   function toggleContenido(contenido: string) {
-    const next = form.contenidos.includes(contenido)
-      ? form.contenidos.filter((x) => x !== contenido)
-      : [...form.contenidos, contenido]
+    const next = contenidosSel.includes(contenido)
+      ? contenidosSel.filter((x) => x !== contenido)
+      : [...contenidosSel, contenido]
     onChange({ contenidos: next })
   }
 
   function toggleEje(eje: string) {
-    const next = form.ejesTransversales.includes(eje)
-      ? form.ejesTransversales.filter((x) => x !== eje)
-      : [...form.ejesTransversales, eje]
+    const next = ejesSel.includes(eje) ? ejesSel.filter((x) => x !== eje) : [...ejesSel, eje]
     onChange({ ejesTransversales: next })
   }
 
@@ -138,14 +138,14 @@ export function GeneradorForm({ form, onChange, onSubmit, loading }: Props) {
           <Field label="Áreas (podés elegir más de una para integrar contenidos)">
             <ChipGroup
               options={AREAS.map((a) => ({ value: a.id, label: a.nombre }))}
-              selected={form.areaIds}
+              selected={areaIds}
               onToggle={toggleArea}
             />
           </Field>
         </div>
 
         <Field label="Contenidos del Diseño Curricular (Santa Fe) — podés elegir varios">
-          {form.areaIds.length === 0 ? (
+          {areaIds.length === 0 ? (
             <p className="rounded-lg border border-dashed border-border bg-muted/30 p-3 text-xs text-muted-foreground">
               Primero elegí al menos un área para ver sus contenidos.
             </p>
@@ -158,7 +158,7 @@ export function GeneradorForm({ form, onChange, onSubmit, loading }: Props) {
                   </span>
                   <div className="flex flex-wrap gap-2">
                     {g.contenidos.map((c) => {
-                      const active = form.contenidos.includes(c)
+                      const active = contenidosSel.includes(c)
                       return (
                         <button
                           key={`${g.area}-${c}`}
@@ -246,7 +246,7 @@ export function GeneradorForm({ form, onChange, onSubmit, loading }: Props) {
         <Field label="Ejes transversales del Diseño Curricular de Santa Fe (opcional)">
           <ChipGroup
             options={EJES_TRANSVERSALES.map((e) => ({ value: e, label: e }))}
-            selected={form.ejesTransversales}
+            selected={ejesSel}
             onToggle={toggleEje}
           />
         </Field>
