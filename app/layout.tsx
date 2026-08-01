@@ -16,7 +16,7 @@ const jakarta = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'SIPPPEAR SmartClass — Recursos didácticos alineados al Diseño Curricular',
+  title: 'SmartClass — Recursos didácticos alineados al Diseño Curricular',
   description:
     'Plataforma para docentes de Educación Primaria de Santa Fe. Generá secuencias y materiales didácticos super-localizados, alineados al Diseño Curricular provincial, sin escribir prompts.',
   generator: 'v0.app',

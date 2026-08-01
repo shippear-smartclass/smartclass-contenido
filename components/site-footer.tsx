@@ -8,7 +8,7 @@ export function SiteFooter() {
           <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <GraduationCap className="size-4" />
           </span>
-          <span className="font-display text-sm font-bold text-foreground">SIPPPEAR SmartClass</span>
+          <span className="font-display text-sm font-bold text-foreground">SmartClass</span>
         </div>
         <p className="text-center text-xs text-muted-foreground sm:text-right">
           Educación Primaria · Provincia de Santa Fe (Rosario y región).
