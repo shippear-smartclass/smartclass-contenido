@@ -10,7 +10,7 @@ import type { FormularioGeneracion, SecuenciaDidactica } from '@/lib/types'
 
 const initialForm: FormularioGeneracion = {
   grado: '',
-  areaId: '',
+  areaIds: [],
   contenido: '',
   temaLocal: '',
   tipoRecurso: 'Secuencia didáctica',
@@ -18,7 +18,7 @@ const initialForm: FormularioGeneracion = {
   duracion: '2 clases',
   nivel: '',
   tipoInstitucion: '',
-  integracion: '',
+  ejesTransversales: [],
   notasDocente: '',
 }
 
@@ -28,7 +28,8 @@ export function GeneradorClient() {
   const [error, setError] = useState<string | null>(null)
   const [secuencia, setSecuencia] = useState<SecuenciaDidactica | null>(null)
 
-  const listo = form.grado && form.areaId && form.contenido && form.nivel && form.tipoInstitucion
+  const listo =
+    form.grado && form.areaIds.length > 0 && form.contenido && form.nivel && form.tipoInstitucion
 
   function onChange(patch: Partial<FormularioGeneracion>) {
     setForm((f) => ({ ...f, ...patch }))
@@ -36,7 +37,7 @@ export function GeneradorClient() {
 
   async function generar() {
     if (!listo) {
-      setError('Completá grado, área, contenido, nivel del grupo y tipo de institución.')
+      setError('Completá grado, al menos un área, contenido, nivel del grupo y tipo de institución.')
       return
     }
     setError(null)

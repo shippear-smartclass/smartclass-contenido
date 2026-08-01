@@ -1,6 +1,6 @@
 import { generateText, Output } from 'ai'
 import { z } from 'zod'
-import { getArea } from '@/lib/curriculum'
+import { getAreas } from '@/lib/curriculum'
 import type { FormularioGeneracion } from '@/lib/types'
 
 export const maxDuration = 60
@@ -30,7 +30,9 @@ const secuenciaSchema = z.object({
 export async function POST(req: Request) {
   try {
     const form = (await req.json()) as FormularioGeneracion
-    const area = getArea(form.areaId)
+    const areas = getAreas(form.areaIds)
+    const nombresAreas = areas.map((a) => a.nombre).join(', ')
+    const ejes = form.ejesTransversales?.length ? form.ejesTransversales.join(', ') : 'ninguno'
 
     const system = `Sos un asistente pedagógico experto en Educación Primaria de la Provincia de Santa Fe, Argentina.
 Generás recursos didácticos alineados ESTRICTAMENTE al Diseño Curricular provincial de Santa Fe.
@@ -45,16 +47,26 @@ Reglas:
     const prompt = `Generá un recurso didáctico con estos parámetros:
 - Tipo de recurso: ${form.tipoRecurso}
 - Grado: ${form.grado}
-- Área: ${area?.nombre ?? form.areaId}
+- Área(s): ${nombresAreas || 'sin especificar'}
 - Contenido curricular (Santa Fe): ${form.contenido}
 - Tema local / de actualidad: ${form.temaLocal || 'sin especificar'}
-- Integración interdisciplinaria: ${form.integracion || 'ninguna'}
+- Ejes transversales del Diseño Curricular de Santa Fe a integrar: ${ejes}
 - Cantidad de actividades: ${form.cantidad}
 - Duración disponible: ${form.duracion}
 - Nivel de aprendizaje del grupo: ${form.nivel}
 - Tipo de institución: ${form.tipoInstitucion}
 - Notas adicionales del docente: ${form.notasDocente || 'ninguna'}
 
+${
+      areas.length > 1
+        ? 'Como se indicó más de un área, integrá y relacioná sus contenidos de forma articulada dentro de la misma secuencia (enfoque interdisciplinario).'
+        : ''
+}
+${
+      form.ejesTransversales?.length
+        ? 'Atravesá el recurso con los ejes transversales indicados, integrándolos de forma pertinente en las actividades.'
+        : ''
+}
 Respetá la cantidad de actividades pedida y distribuí los momentos (Inicio, Desarrollo, Cierre) de forma coherente.`
 
     const { output } = await generateText({

@@ -119,6 +119,25 @@ export const CANTIDADES = ['3 actividades', '4 actividades', '5 actividades', '6
 
 export const DURACIONES = ['1 clase (40 min)', '2 clases', '3 clases', '1 semana', '2 semanas'] as const
 
+// Ejes transversales del Diseño Curricular de la Provincia de Santa Fe.
+// Atraviesan todas las áreas y permiten integrar los contenidos.
+export const EJES_TRANSVERSALES = [
+  'Educación Sexual Integral (ESI)',
+  'Educación Ambiental Integral',
+  'Educación en Derechos Humanos',
+  'Educación Intercultural',
+  'Educación y Memoria',
+  'Educación para la Salud',
+  'Educación Vial',
+  'Educación para el Consumo y la Ciudadanía',
+  'Educación Digital y Tecnológica',
+  'Educación para la Igualdad de Género',
+] as const
+
 export function getArea(id: string) {
   return AREAS.find((a) => a.id === id)
+}
+
+export function getAreas(ids: string[]) {
+  return AREAS.filter((a) => ids.includes(a.id))
 }
