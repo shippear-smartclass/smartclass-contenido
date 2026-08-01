@@ -1,8 +1,20 @@
+'use client'
+
 import Link from 'next/link'
-import { GraduationCap, LayoutGrid } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { GraduationCap, LayoutGrid, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useAuth } from '@/components/auth/auth-provider'
 
 export function AppHeader() {
+  const { user, signOut } = useAuth()
+  const router = useRouter()
+
+  function onSignOut() {
+    signOut()
+    router.replace('/login')
+  }
+
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background/90 backdrop-blur no-print">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
@@ -18,12 +30,31 @@ export function AppHeader() {
           </span>
         </Link>
 
-        <Button asChild variant="outline" size="sm" className="gap-2">
-          <Link href="/app">
-            <LayoutGrid className="size-4" />
-            Herramientas
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button asChild variant="outline" size="sm" className="gap-2">
+            <Link href="/app">
+              <LayoutGrid className="size-4" />
+              <span className="hidden sm:inline">Herramientas</span>
+            </Link>
+          </Button>
+
+          {user && (
+            <>
+              <span className="hidden max-w-[10rem] truncate text-sm text-muted-foreground sm:inline">
+                {user.nombre}
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-2 text-muted-foreground"
+                onClick={onSignOut}
+              >
+                <LogOut className="size-4" />
+                <span className="hidden sm:inline">Salir</span>
+              </Button>
+            </>
+          )}
+        </div>
       </div>
     </header>
   )

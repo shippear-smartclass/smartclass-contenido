@@ -48,11 +48,19 @@ export function GeneradorClient() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       })
-      if (!res.ok) throw new Error('request failed')
-      const data = await res.json()
+      const data = await res.json().catch(() => null)
+      if (!res.ok) {
+        throw new Error(
+          data?.error ?? 'No se pudo generar el recurso. Revisá tu conexión e intentá nuevamente.',
+        )
+      }
       setSecuencia(data.secuencia as SecuenciaDidactica)
-    } catch {
-      setError('No se pudo generar el recurso. Revisá tu conexión e intentá nuevamente.')
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'No se pudo generar el recurso. Revisá tu conexión e intentá nuevamente.',
+      )
     } finally {
       setLoading(false)
     }
