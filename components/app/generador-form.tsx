@@ -20,7 +20,8 @@ import {
   TEMAS_LOCALES,
   CANTIDADES,
   DURACIONES,
-  getArea,
+  EJES_TRANSVERSALES,
+  getAreas,
 } from '@/lib/curriculum'
 import type { FormularioGeneracion } from '@/lib/types'
 
@@ -40,9 +41,71 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   )
 }
 
+function ChipGroup({
+  options,
+  selected,
+  onToggle,
+}: {
+  options: { value: string; label: string }[]
+  selected: string[]
+  onToggle: (value: string) => void
+}) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {options.map((o) => {
+        const active = selected.includes(o.value)
+        return (
+          <button
+            key={o.value}
+            type="button"
+            aria-pressed={active}
+            onClick={() => onToggle(o.value)}
+            className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
+              active
+                ? 'border-primary bg-primary text-primary-foreground'
+                : 'border-border bg-background text-muted-foreground hover:border-primary/50 hover:text-foreground'
+            }`}
+          >
+            {o.label}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 export function GeneradorForm({ form, onChange, onSubmit, loading }: Props) {
-  const area = getArea(form.areaId)
-  const contenidos = area?.contenidos ?? []
+  const areaIds = form.areaIds ?? []
+  const contenidosSel = form.contenidos ?? []
+  const ejesSel = form.ejesTransversales ?? []
+
+  const areasSeleccionadas = getAreas(areaIds)
+  // Contenidos disponibles agrupados por cada área elegida, para poder
+  // integrar contenidos de más de un área.
+  const gruposContenidos = areasSeleccionadas.map((a) => ({
+    area: a.nombre,
+    contenidos: a.contenidos,
+  }))
+
+  function toggleArea(id: string) {
+    const next = areaIds.includes(id) ? areaIds.filter((x) => x !== id) : [...areaIds, id]
+    // Filtramos los contenidos elegidos que ya no pertenezcan a ningún área seleccionada.
+    const disponibles = getAreas(next).flatMap((a) => a.contenidos)
+    const contenidos = contenidosSel.filter((c) => disponibles.includes(c))
+    onChange({ areaIds: next, contenidos })
+  }
+
+  function toggleContenido(contenido: string) {
+    const next = contenidosSel.includes(contenido)
+      ? contenidosSel.filter((x) => x !== contenido)
+      : [...contenidosSel, contenido]
+    onChange({ contenidos: next })
+  }
+
+  function toggleEje(eje: string) {
+    const next = ejesSel.includes(eje) ? ejesSel.filter((x) => x !== eje) : [...ejesSel, eje]
+    onChange({ ejesTransversales: next })
+  }
 
   return (
     <form
@@ -72,44 +135,60 @@ export function GeneradorForm({ form, onChange, onSubmit, loading }: Props) {
             </Select>
           </Field>
 
-          <Field label="Área">
-            <Select
-              value={form.areaId}
-              onValueChange={(v) => onChange({ areaId: v ?? '', contenido: '' })}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Seleccioná el área">
-                  {(value: string) => AREAS.find((a) => a.id === value)?.nombre ?? value}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                {AREAS.map((a) => (
-                  <SelectItem key={a.id} value={a.id}>
-                    {a.nombre}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <Field label="Áreas (podés elegir más de una para integrar contenidos)">
+            <ChipGroup
+              options={AREAS.map((a) => ({ value: a.id, label: a.nombre }))}
+              selected={areaIds}
+              onToggle={toggleArea}
+            />
           </Field>
         </div>
 
-        <Field label="Contenido del Diseño Curricular (Santa Fe)">
-          <Select
-            value={form.contenido}
-            onValueChange={(v) => onChange({ contenido: v ?? '' })}
-            disabled={!form.areaId}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder={form.areaId ? 'Elegí un contenido' : 'Primero elegí un área'} />
-            </SelectTrigger>
-            <SelectContent>
-              {contenidos.map((c) => (
-                <SelectItem key={c} value={c}>
-                  {c}
-                </SelectItem>
+        <Field label="Contenidos del Diseño Curricular (Santa Fe) — podés elegir varios">
+          {areaIds.length === 0 ? (
+            <p className="rounded-lg border border-dashed border-border bg-muted/30 p-3 text-xs text-muted-foreground">
+              Primero elegí al menos un área para ver sus contenidos.
+            </p>
+          ) : (
+            <div className="flex flex-col gap-4 rounded-lg border border-border bg-muted/20 p-3">
+              {gruposContenidos.map((g) => (
+                <div key={g.area} className="flex flex-col gap-2">
+                  <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                    {g.area}
+                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    {g.contenidos.map((c) => {
+                      const active = contenidosSel.includes(c)
+                      return (
+                        <button
+                          key={`${g.area}-${c}`}
+                          type="button"
+                          aria-pressed={active}
+                          onClick={() => toggleContenido(c)}
+                          className={`rounded-full border px-3 py-1.5 text-left text-xs font-medium transition-colors ${
+                            active
+                              ? 'border-primary bg-primary text-primary-foreground'
+                              : 'border-border bg-background text-muted-foreground hover:border-primary/50 hover:text-foreground'
+                          }`}
+                        >
+                          {c}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
               ))}
-            </SelectContent>
-          </Select>
+            </div>
+          )}
+        </Field>
+
+        <Field label="Otros contenidos (opcional) — escribí los que quieras agregar">
+          <Textarea
+            value={form.contenidosExtra}
+            onChange={(e) => onChange({ contenidosExtra: e.target.value })}
+            placeholder="Ej: fracciones equivalentes, lectura de textos instructivos, cuidado del agua..."
+            rows={3}
+          />
         </Field>
       </section>
 
@@ -164,23 +243,12 @@ export function GeneradorForm({ form, onChange, onSubmit, loading }: Props) {
           </Field>
         </div>
 
-        <Field label="Integración interdisciplinaria (opcional)">
-          <Select
-            value={form.integracion || 'ninguna'}
-            onValueChange={(v) => onChange({ integracion: !v || v === 'ninguna' ? '' : v })}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Sin integración" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ninguna">Sin integración</SelectItem>
-              {AREAS.filter((a) => a.id !== form.areaId).map((a) => (
-                <SelectItem key={a.id} value={a.nombre}>
-                  {a.nombre}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <Field label="Ejes transversales del Diseño Curricular de Santa Fe (opcional)">
+          <ChipGroup
+            options={EJES_TRANSVERSALES.map((e) => ({ value: e, label: e }))}
+            selected={ejesSel}
+            onToggle={toggleEje}
+          />
         </Field>
       </section>
 
