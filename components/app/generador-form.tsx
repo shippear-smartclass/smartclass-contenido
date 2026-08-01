@@ -122,7 +122,7 @@ export function GeneradorForm({ form, onChange, onSubmit, loading }: Props) {
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Grado">
             <Select value={form.grado} onValueChange={(v) => onChange({ grado: v ?? '' })}>
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Seleccioná el grado" />
               </SelectTrigger>
               <SelectContent>
@@ -198,7 +198,7 @@ export function GeneradorForm({ form, onChange, onSubmit, loading }: Props) {
         </h3>
         <Field label="Tema local / de actualidad (opcional)">
           <Select value={form.temaLocal} onValueChange={(v) => onChange({ temaLocal: v ?? '' })}>
-            <SelectTrigger>
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Vincular con un tema de Rosario / Santa Fe" />
             </SelectTrigger>
             <SelectContent>
@@ -214,7 +214,7 @@ export function GeneradorForm({ form, onChange, onSubmit, loading }: Props) {
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Nivel de aprendizaje del grupo">
             <Select value={form.nivel} onValueChange={(v) => onChange({ nivel: v ?? '' })}>
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Seleccioná" />
               </SelectTrigger>
               <SelectContent>
@@ -229,7 +229,7 @@ export function GeneradorForm({ form, onChange, onSubmit, loading }: Props) {
 
           <Field label="Tipo de institución">
             <Select value={form.tipoInstitucion} onValueChange={(v) => onChange({ tipoInstitucion: v ?? '' })}>
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Seleccioná" />
               </SelectTrigger>
               <SelectContent>
@@ -259,7 +259,7 @@ export function GeneradorForm({ form, onChange, onSubmit, loading }: Props) {
         <div className="grid gap-4 sm:grid-cols-3">
           <Field label="Tipo de recurso">
             <Select value={form.tipoRecurso} onValueChange={(v) => onChange({ tipoRecurso: v ?? '' })}>
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Tipo" />
               </SelectTrigger>
               <SelectContent>
@@ -274,7 +274,7 @@ export function GeneradorForm({ form, onChange, onSubmit, loading }: Props) {
 
           <Field label="Cantidad de actividades">
             <Select value={form.cantidad} onValueChange={(v) => onChange({ cantidad: v ?? '' })}>
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Cantidad" />
               </SelectTrigger>
               <SelectContent>
@@ -289,7 +289,7 @@ export function GeneradorForm({ form, onChange, onSubmit, loading }: Props) {
 
           <Field label="Duración disponible">
             <Select value={form.duracion} onValueChange={(v) => onChange({ duracion: v ?? '' })}>
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Duración" />
               </SelectTrigger>
               <SelectContent>

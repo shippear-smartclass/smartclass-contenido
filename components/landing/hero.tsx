@@ -54,22 +54,37 @@ export function Hero() {
           </dl>
         </div>
 
-        <div className="relative">
-          <div className="overflow-hidden rounded-2xl border border-border shadow-xl">
-            <Image
-              src="/images/hero-docente.png"
-              alt="Docente de primaria acompañando a sus alumnos en el aula"
-              width={720}
-              height={560}
-              className="h-full w-full object-cover"
-              priority
-            />
+        <div className="flex flex-col gap-6">
+          <div className="relative">
+            <div className="overflow-hidden rounded-2xl border border-border shadow-xl">
+              <Image
+                src="/images/hero-docente.png"
+                alt="Docente de primaria acompañando a sus alumnos en el aula"
+                width={720}
+                height={560}
+                className="h-full w-full object-cover"
+                priority
+              />
+            </div>
+            <div className="absolute -bottom-5 -left-5 hidden max-w-[220px] rounded-xl border border-border bg-card p-4 shadow-lg sm:block">
+              <p className="text-xs font-medium text-muted-foreground">Contexto local</p>
+              <p className="mt-1 text-sm font-semibold text-foreground text-pretty">
+                "El río Paraná" integrado a una secuencia de Ciencias Naturales de 4° grado.
+              </p>
+            </div>
           </div>
-          <div className="absolute -bottom-5 -left-5 hidden max-w-[220px] rounded-xl border border-border bg-card p-4 shadow-lg sm:block">
-            <p className="text-xs font-medium text-muted-foreground">Contexto local</p>
-            <p className="mt-1 text-sm font-semibold text-foreground text-pretty">
-              "El río Paraná" integrado a una secuencia de Ciencias Naturales de 4° grado.
-            </p>
+
+          <div className="mt-4 overflow-hidden rounded-2xl border border-border shadow-xl">
+            <div className="aspect-video">
+              <iframe
+                src="https://www.youtube.com/embed/gsz1UYtlEUI"
+                title="SmartClass - Shippear 2.0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+                className="h-full w-full"
+              />
+            </div>
           </div>
         </div>
       </div>

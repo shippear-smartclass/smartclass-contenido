@@ -31,7 +31,7 @@ export function SiteHeader() {
         </nav>
 
         <Button asChild size="sm">
-          <Link href="/app">Ingresar a la plataforma</Link>
+          <Link href="/login">Ingresar a la plataforma</Link>
         </Button>
       </div>
     </header>
