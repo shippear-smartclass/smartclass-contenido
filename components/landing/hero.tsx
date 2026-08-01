@@ -18,7 +18,7 @@ export function Hero() {
           </h1>
 
           <p className="max-w-xl text-lg leading-relaxed text-muted-foreground text-pretty">
-            SIPPPEAR SmartClass genera secuencias y materiales super-localizados para Educación Primaria,
+            SmartClass genera secuencias y materiales super-localizados para Educación Primaria,
             alineados automáticamente al programa oficial de la provincia. La IA hace la tarea repetitiva;
             el criterio pedagógico sigue siendo tuyo.
           </p>
